@@ -53,6 +53,7 @@ namespace city.api
             #region Dependences
             services.AddScoped<CityService>();
             services.AddScoped<IRepository<City>, CityRepository>();
+            services.AddScoped<IRepository<State>, BaseRepository<State>>();
             services.AddScoped<IMongoClient, MongoClientFactory>();
 
             services.AddScoped<IDataProvider, DataProvider>(x =>
@@ -62,12 +63,14 @@ namespace city.api
 
             #region GraphQL Setup
             StartupResolve.ConfigureServices(services);
-            services.AddScoped<IGraphQLExecuter<AppScheme<CityQuery>>, DefaultGraphQLExecuter<AppScheme<CityQuery>>>();
+            services.AddScoped<IGraphQLExecuter<AppScheme<MacroQuery>>, DefaultGraphQLExecuter<AppScheme<MacroQuery>>>();
+            services.AddScoped<MacroQuery>();
             services.AddScoped<CityQuery>();
+            services.AddScoped<StateQuery>();
             services.AddScoped<CityType>();
             services.AddScoped<StateType>();
             services.AddScoped<GuidGraphType>();
-            services.AddScoped<AppScheme<CityQuery>>();
+            services.AddScoped<AppScheme<MacroQuery>>();
             services.AddScoped<EnumerationGraphType<RecordStatus>>();
             #endregion
 
@@ -99,7 +102,7 @@ namespace city.api
             app.UseRewriter(option);
 
             #region GraphQL Setup
-            app.UseGraphQL<AppScheme<CityQuery>>();
+            app.UseGraphQL<AppScheme<MacroQuery>>();
             StartupResolve.Configure(app);
             #endregion
         }

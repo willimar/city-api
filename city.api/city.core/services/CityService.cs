@@ -62,6 +62,15 @@ namespace city.core.services
             return cities;
         }
 
+        public List<State> LoadExcelStateData(FileInfo excelFile)
+        {
+            ExcelPackage package = new ExcelPackage(excelFile);
+
+            var states = this.GetStates(package.Workbook.Worksheets[1]);
+
+            return states;
+        }
+
         private List<City> GetCities(ExcelWorksheet cities, List<State> states)
         {
             const int IBGE = 2;

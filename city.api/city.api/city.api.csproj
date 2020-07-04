@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageProjectUrl>https://github.com/willimar/crud.api</PackageProjectUrl>
     <RepositoryUrl>https://github.com/willimar/crud.api</RepositoryUrl>
-    <Version>1.0.1.1</Version>
+    <Version>1.0.1.2</Version>
     <Copyright>© 2020 Willimar</Copyright>
     <Description>.</Description>
     <Product>City search api service</Product>
