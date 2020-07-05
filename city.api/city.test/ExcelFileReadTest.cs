@@ -37,17 +37,17 @@ namespace city.test
             };
 
             var stream = new FileInfo(path);
-            var service = new CityService(new CityRepository(new DataProvider(new MongoClientFactory(), "city")));
+            var service = new CityService(new CityRepository(new DataProvider(new MongoClientFactory(), "crud-api")));
             var states = service.LoadExcelStateData(stream, country);
 
             var stateResult = new List<IHandleMessage>();
             var cityResult = new List<IHandleMessage>();
 
-            var countryRepository = new BaseRepository<Country>(new DataProvider(new MongoClientFactory(), "city"));
+            var countryRepository = new BaseRepository<Country>(new DataProvider(new MongoClientFactory(), "crud-api"));
 
             countryRepository.AppenData(country);
 
-            var repository = new BaseRepository<State>(new DataProvider(new MongoClientFactory(), "city"));
+            var repository = new BaseRepository<State>(new DataProvider(new MongoClientFactory(), "crud-api"));
 
             foreach (var item in states)
             {
