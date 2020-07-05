@@ -13,7 +13,7 @@ namespace city.test
         {
             string connectionString;
 
-             connectionString = $"mongodb+srv://atlasUser:itsgallus@cluster0.2c2wj.mongodb.net/city?retryWrites=true&w=majority";
+             connectionString = $"mongodb+srv://atlasUser:itsgallus@cluster0.2c2wj.mongodb.net/crud-api?retryWrites=true&w=majority";
             // connectionString = $"mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false";
 
             return connectionString;

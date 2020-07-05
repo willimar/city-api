@@ -2,9 +2,11 @@ using city.core.entities;
 using city.core.repositories;
 using city.core.services;
 using crud.api.core.enums;
+using crud.api.core.fieldType;
 using crud.api.core.interfaces;
 using crud.api.core.repositories;
 using data.provider.core.mongo;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,72 +17,56 @@ namespace city.test
 {
     public class ExcelFileReadTest
     {
-        [Fact]
-        public void ReadFile()
-        {
-            var path = @"D:\Projetos\DotNet Core\city-api\city.core\city.test\Lista-de-Municípios-com-IBGE-Brasil.xlsx";
-
-            var stream = new FileInfo(path);
-            var service = new CityService(null);
-            var cities = service.LoadExcelData(stream);
-
-            Assert.True(cities.Count == 5570);
-        }
-
-        [Fact]
-        public void ImportCityData()
-        {
-            var path = @"D:\Projetos\DotNet Core\city-api\city.api\city.test\Lista-de-Municípios-com-IBGE-Brasil.xlsx";
-
-            var stream = new FileInfo(path);
-            var service = new CityService(new CityRepository(new DataProvider(new MongoClientFactory(), "city")));
-            var cities = service.LoadExcelData(stream);
-
-            var result = new List<IHandleMessage>();
-
-            foreach (var item in cities)
-            {
-                var response = service.SaveData(item);
-
-                result.AddRange(response);
-            }
-
-            Assert.DoesNotContain(result, x => !x.Code.Equals(HandlesCode.Accepted));
-        }
 
         [Fact]
         public void ImportStateData()
         {
             var path = @"D:\Projetos\DotNet Core\city-api\city.api\city.test\Lista-de-Municípios-com-IBGE-Brasil.xlsx";
 
+            var country = new Country()
+            {
+                Id = Guid.NewGuid(),
+                Initials = "BRA",
+                Language = "pt_BR",
+                TimeZone1 = "America/Sao_Paulo",
+                TimeZone2 = "E. South America Standard Time",
+                LastChangeDate = DateTime.UtcNow,
+                Name = "Brasil",
+                RegisterDate = DateTime.UtcNow,
+                Status = RecordStatus.Active
+            };
+
             var stream = new FileInfo(path);
             var service = new CityService(new CityRepository(new DataProvider(new MongoClientFactory(), "city")));
-            var cities = service.LoadExcelStateData(stream);
+            var states = service.LoadExcelStateData(stream, country);
 
-            var result = new List<IHandleMessage>();
+            var stateResult = new List<IHandleMessage>();
+            var cityResult = new List<IHandleMessage>();
 
-            foreach (var item in cities)
+            var countryRepository = new BaseRepository<Country>(new DataProvider(new MongoClientFactory(), "city"));
+
+            countryRepository.AppenData(country);
+
+            var repository = new BaseRepository<State>(new DataProvider(new MongoClientFactory(), "city"));
+
+            foreach (var item in states)
             {
-                var repository = new BaseRepository<State>(new DataProvider(new MongoClientFactory(), "city"));
                 var response = repository.AppenData(item);
 
-                result.AddRange(response);
+                stateResult.AddRange(response);
             }
 
-            Assert.DoesNotContain(result, x => !x.Code.Equals(HandlesCode.Accepted));
-        }
-
-        [Fact]
-        public void AjustarCities()
-        {
-            var cityRep = new BaseRepository<City>(new DataProvider(new MongoClientFactory(), "city"));
-            var cities = cityRep.GetData(x => true);
+            var cities = service.LoadExcelData(stream, states);
 
             foreach (var item in cities)
             {
-                item.UF = item.State.Initials;
-                cityRep.UpdateData(item, i => i.Id == item.Id);
+                var response = service.SaveData(item);
+
+                cityResult.AddRange(response);
             }
+
+            Assert.DoesNotContain(stateResult, x => !x.Code.Equals(HandlesCode.Accepted));
+            Assert.DoesNotContain(cityResult, x => !x.Code.Equals(HandlesCode.Accepted));
         }
     }
 }

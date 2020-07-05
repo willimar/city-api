@@ -19,7 +19,7 @@ namespace city.core.services
         {
         }
 
-        private List<State> GetStates(ExcelWorksheet states)
+        private List<State> GetStates(ExcelWorksheet states, Country country)
         {
             int rows = states.Dimension.Rows;
 
@@ -30,7 +30,7 @@ namespace city.core.services
             const int QtdMun = 5;
 
             var result = new List<State>();
-
+            
             for (int i = 2; i <= rows; i++)
             {
                 var state = new State()
@@ -43,7 +43,8 @@ namespace city.core.services
                     NumberCities = Convert.ToInt32(states.Cells[i, QtdMun].Value),
                     Region = Convert.ToString(states.Cells[i, Regiao].Value),
                     RegisterDate = DateTime.UtcNow,
-                    Status = RecordStatus.Active
+                    Status = RecordStatus.Active,
+                    Country = country
                 };
 
                 result.Add(state);
@@ -52,21 +53,20 @@ namespace city.core.services
             return result;
         }
 
-        public List<City> LoadExcelData(FileInfo excelFile)
+        public List<City> LoadExcelData(FileInfo excelFile, List<State> states)
         {
             ExcelPackage package = new ExcelPackage(excelFile);
 
-            var states = this.GetStates(package.Workbook.Worksheets[1]);
             var cities = this.GetCities(package.Workbook.Worksheets[0], states);
 
             return cities;
         }
 
-        public List<State> LoadExcelStateData(FileInfo excelFile)
+        public List<State> LoadExcelStateData(FileInfo excelFile, Country country)
         {
             ExcelPackage package = new ExcelPackage(excelFile);
 
-            var states = this.GetStates(package.Workbook.Worksheets[1]);
+            var states = this.GetStates(package.Workbook.Worksheets[1], country);
 
             return states;
         }
@@ -103,6 +103,8 @@ namespace city.core.services
                     State = states.FirstOrDefault(s => s.Initials.Equals(Convert.ToString(cities.Cells[i, UF].Value))),
                     Status = RecordStatus.Active
                 };
+
+                city.Uf = city.State.Initials;
 
                 using (MD5 md5 = MD5.Create())
                 {
