@@ -69,5 +69,18 @@ namespace city.test
 
             Assert.DoesNotContain(result, x => !x.Code.Equals(HandlesCode.Accepted));
         }
+
+        [Fact]
+        public void AjustarCities()
+        {
+            var cityRep = new BaseRepository<City>(new DataProvider(new MongoClientFactory(), "city"));
+            var cities = cityRep.GetData(x => true);
+
+            foreach (var item in cities)
+            {
+                item.UF = item.State.Initials;
+                cityRep.UpdateData(item, i => i.Id == item.Id);
+            }
+        }
     }
 }

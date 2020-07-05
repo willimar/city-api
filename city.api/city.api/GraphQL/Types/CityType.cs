@@ -23,6 +23,7 @@ namespace city.api.GraphQL.Types
             Field(f => f.Region);
             Field(f => f.RegisterDate, type: typeof(DateTimeGraphType));
             Field(f => f.Size);
+            Field(f => f.UF);
             Field(f => f.State, type: typeof(StateType));
             Field(f => f.Status, type: typeof(EnumerationGraphType<RecordStatus>));
         }

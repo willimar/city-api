@@ -10,6 +10,7 @@ namespace city.core.entities
     {
         public string Name { get; set; }
         public State State { get; set; }
+        public string UF { get; set; }
         public int IbgeCode { get; set; }
         public int Ibge7Code { get; set; }
         public string Region { get; set; }
