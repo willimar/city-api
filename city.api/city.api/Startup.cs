@@ -65,7 +65,7 @@ namespace city.api
             #endregion
 
             #region GraphQL Setup
-            StartupResolve.ConfigureServices(services);
+            StartupResolve.ConfigureServices<Startup>(services);
             services.AddScoped<IGraphQLExecuter<AppScheme<MacroQuery>>, DefaultGraphQLExecuter<AppScheme<MacroQuery>>>();
 
             services.AddScoped<MacroQuery>();
