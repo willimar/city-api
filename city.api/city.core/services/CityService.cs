@@ -2,12 +2,10 @@
 using crud.api.core.fieldType;
 using crud.api.core.repositories;
 using crud.api.core.services;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -19,112 +17,112 @@ namespace city.core.services
         {
         }
 
-        private List<State> GetStates(ExcelWorksheet states, Country country)
-        {
-            int rows = states.Dimension.Rows;
+        //private List<State> GetStates(ExcelWorksheet states, Country country)
+        //{
+        //    int rows = states.Dimension.Rows;
 
-            const int IBGE = 1;
-            const int Estado = 2;
-            const int UF = 3;
-            const int Regiao = 4;
-            const int QtdMun = 5;
+        //    const int IBGE = 1;
+        //    const int Estado = 2;
+        //    const int UF = 3;
+        //    const int Regiao = 4;
+        //    const int QtdMun = 5;
 
-            var result = new List<State>();
-            
-            for (int i = 2; i <= rows; i++)
-            {
-                var state = new State()
-                {
-                    IbgeCode = Convert.ToInt32(states.Cells[i, IBGE].Value),
-                    Id = Guid.NewGuid(),
-                    Initials = Convert.ToString(states.Cells[i, UF].Value),
-                    LastChangeDate = DateTime.UtcNow,
-                    Name = Convert.ToString(states.Cells[i, Estado].Value),
-                    NumberCities = Convert.ToInt32(states.Cells[i, QtdMun].Value),
-                    Region = Convert.ToString(states.Cells[i, Regiao].Value),
-                    RegisterDate = DateTime.UtcNow,
-                    Status = RecordStatus.Active,
-                    Country = country
-                };
+        //    var result = new List<State>();
 
-                result.Add(state);
-            }
+        //    for (int i = 2; i <= rows; i++)
+        //    {
+        //        var state = new State()
+        //        {
+        //            IbgeCode = Convert.ToInt32(states.Cells[i, IBGE].Value),
+        //            Id = Guid.NewGuid(),
+        //            Initials = Convert.ToString(states.Cells[i, UF].Value),
+        //            LastChangeDate = DateTime.UtcNow,
+        //            Name = Convert.ToString(states.Cells[i, Estado].Value),
+        //            NumberCities = Convert.ToInt32(states.Cells[i, QtdMun].Value),
+        //            Region = Convert.ToString(states.Cells[i, Regiao].Value),
+        //            RegisterDate = DateTime.UtcNow,
+        //            Status = RecordStatus.Active,
+        //            Country = country
+        //        };
 
-            return result;
-        }
+        //        result.Add(state);
+        //    }
 
-        public List<City> LoadExcelData(FileInfo excelFile, List<State> states)
-        {
-            ExcelPackage package = new ExcelPackage(excelFile);
+        //    return result;
+        //}
 
-            var cities = this.GetCities(package.Workbook.Worksheets[0], states);
+        //public List<City> LoadExcelData(FileInfo excelFile, List<State> states)
+        //{
+        //    ExcelPackage package = new ExcelPackage(excelFile);
 
-            return cities;
-        }
+        //    var cities = this.GetCities(package.Workbook.Worksheets[0], states);
 
-        public List<State> LoadExcelStateData(FileInfo excelFile, Country country)
-        {
-            ExcelPackage package = new ExcelPackage(excelFile);
+        //    return cities;
+        //}
 
-            var states = this.GetStates(package.Workbook.Worksheets[1], country);
+        //public List<State> LoadExcelStateData(FileInfo excelFile, Country country)
+        //{
+        //    ExcelPackage package = new ExcelPackage(excelFile);
 
-            return states;
-        }
+        //    var states = this.GetStates(package.Workbook.Worksheets[1], country);
 
-        private List<City> GetCities(ExcelWorksheet cities, List<State> states)
-        {
-            const int IBGE = 2;
-            const int IBGE7 = 3;
-            const int UF = 4;
-            const int Municipio = 5;
-            const int Regiao = 6;
-            const int Populacao = 7;
-            const int Porte = 8;
-            const int Capital = 9;
+        //    return states;
+        //}
 
-            int rows = cities.Dimension.Rows;
+        //private List<City> GetCities(ExcelWorksheet cities, List<State> states)
+        //{
+        //    const int IBGE = 2;
+        //    const int IBGE7 = 3;
+        //    const int UF = 4;
+        //    const int Municipio = 5;
+        //    const int Regiao = 6;
+        //    const int Populacao = 7;
+        //    const int Porte = 8;
+        //    const int Capital = 9;
 
-            var result = new List<City>();
+        //    int rows = cities.Dimension.Rows;
 
-            for (int i = 2; i <= rows; i++)
-            {
-                var city = new City()
-                {
-                    Ibge7Code = Convert.ToInt32(cities.Cells[i, IBGE7].Value),
-                    IbgeCode = Convert.ToInt32(cities.Cells[i, IBGE].Value),
-                    Id = Guid.NewGuid(),
-                    IsCapital = !string.IsNullOrEmpty(Convert.ToString(cities.Cells[i, Capital].Value)),
-                    LastChangeDate = DateTime.UtcNow,
-                    Name = Convert.ToString(cities.Cells[i, Municipio].Value),
-                    Population = Convert.ToInt32(cities.Cells[i, Populacao].Value),
-                    Region = Convert.ToString(cities.Cells[i, Regiao].Value),
-                    RegisterDate = DateTime.UtcNow,
-                    Size = Convert.ToString(cities.Cells[i, Porte].Value),
-                    State = states.FirstOrDefault(s => s.Initials.Equals(Convert.ToString(cities.Cells[i, UF].Value))),
-                    Status = RecordStatus.Active
-                };
+        //    var result = new List<City>();
 
-                city.Uf = city.State.Initials;
+        //    for (int i = 2; i <= rows; i++)
+        //    {
+        //        var city = new City()
+        //        {
+        //            Ibge7Code = Convert.ToInt32(cities.Cells[i, IBGE7].Value),
+        //            IbgeCode = Convert.ToInt32(cities.Cells[i, IBGE].Value),
+        //            Id = Guid.NewGuid(),
+        //            IsCapital = !string.IsNullOrEmpty(Convert.ToString(cities.Cells[i, Capital].Value)),
+        //            LastChangeDate = DateTime.UtcNow,
+        //            Name = Convert.ToString(cities.Cells[i, Municipio].Value),
+        //            Population = Convert.ToInt32(cities.Cells[i, Populacao].Value),
+        //            Region = Convert.ToString(cities.Cells[i, Regiao].Value),
+        //            RegisterDate = DateTime.UtcNow,
+        //            Size = Convert.ToString(cities.Cells[i, Porte].Value),
+        //            State = states.FirstOrDefault(s => s.Initials.Equals(Convert.ToString(cities.Cells[i, UF].Value))),
+        //            Status = RecordStatus.Active
+        //        };
 
-                using (MD5 md5 = MD5.Create())
-                {
-                    var value = $"{city.Ibge7Code}{city.IbgeCode}{city.Name}";
-                    byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(value);
-                    byte[] hashBytes = md5.ComputeHash(inputBytes);
+        //        city.Uf = city.State.Initials;
 
-                    StringBuilder sb = new StringBuilder();
-                    for (int x = 0; x < hashBytes.Length; x++)
-                    {
-                        sb.Append(hashBytes[x].ToString("X2"));
-                    }
+        //        using (MD5 md5 = MD5.Create())
+        //        {
+        //            var value = $"{city.Ibge7Code}{city.IbgeCode}{city.Name}";
+        //            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(value);
+        //            byte[] hashBytes = md5.ComputeHash(inputBytes);
 
-                    city.HashId = sb.ToString();
-                }
+        //            StringBuilder sb = new StringBuilder();
+        //            for (int x = 0; x < hashBytes.Length; x++)
+        //            {
+        //                sb.Append(hashBytes[x].ToString("X2"));
+        //            }
 
-                result.Add(city);
-            }
+        //            city.HashId = sb.ToString();
+        //        }
 
-            return result;
-        }
+        //        result.Add(city);
+        //    }
+
+        //    return result;
+        //}
     }
 }

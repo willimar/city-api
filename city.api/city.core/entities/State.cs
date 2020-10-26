@@ -1,8 +1,4 @@
 ﻿using crud.api.core.entities;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace city.core.entities
 {

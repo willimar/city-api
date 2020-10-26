@@ -13,8 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="crud.api.core" Version="1.2.3.2" />
-    <PackageReference Include="EPPlus" Version="5.4.0" />
+    <PackageReference Include="crud.api.core" Version="1.2.3.6" />
   </ItemGroup>
 
   <ItemGroup>
