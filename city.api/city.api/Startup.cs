@@ -66,6 +66,7 @@ namespace city.api
 
             #region GraphQL Setup
             StartupResolve.ConfigureServices<Startup>(services);
+            services.AddSingleton<ExternalAccessSettings>(serviceProvider => new ExternalAccessSettings("ExternalAccess", serviceProvider.GetService<IConfiguration>()));
             services.AddScoped<IGraphQLExecuter<AppScheme<MacroQuery>>, DefaultGraphQLExecuter<AppScheme<MacroQuery>>>();
 
             services.AddScoped<MacroQuery>();

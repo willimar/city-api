@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="crud.api.core" Version="1.2.3.6" />
+    <PackageReference Include="crud.api.core" Version="1.2.3.7" />
   </ItemGroup>
 
   <ItemGroup>
